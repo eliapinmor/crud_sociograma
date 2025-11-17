@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: mini-crud-php84
+    container_name: crud-sociograma-php84
     ports:
       - "8080:80" # Acceso desde tu equipo: http://localhost:8080
     volumes:
