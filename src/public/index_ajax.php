@@ -1,3 +1,12 @@
+<?php 
+declare(strict_types=1);
+session_start();
+if (!isset($_SESSION["usuario"])) {
+    header("Location: login.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -5,7 +14,7 @@
     <title>Mini CRUD AJAX (fetch + JSON)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Hoja de estilos básica -->
-    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/public/assets/css/styles.css" />
   </head>
   <body>
     <!-- Encabezado semántico -->
@@ -17,6 +26,7 @@
         Esta pantalla usa JavaScript para hablar con la API PHP y actualizar la
         tabla sin recargar la página.
       </p>
+          <p><a href="logout.php">Cerrar sesión</a></p>
     </header>
     <main class="zona-principal" id="zona-principal" tabindex="-1">
       <!-- Zona de mensajes (con aria-live para lectores de pantalla) -->
@@ -118,6 +128,6 @@
       <p><a href="/index.php">Ir a Parte 1 (clásica sin AJAX)</a></p>
     </footer>
     <!-- Nuestro JavaScript -->
-    <script src="/assets/js/main.js" defer></script>
+    <script src="/public/assets/js/main.js" defer></script>
   </body>
 </html>

@@ -38,8 +38,8 @@ function responder_json_error(string $mensajeError, int $codigoHttp = 400): void
     exit;
 }
 
-// 2) Ruta al archivo de persistencia (misma carpeta)
-$rutaArchivoDatosJson = __DIR__ . '/data.json';
+// 2) Ruta al archivo de persistencia (carpeta storage)
+$rutaArchivoDatosJson = __DIR__ . '/storage/data.json';
 // 2.1) Si no existe, lo creamos con un array JSON vacío ([])
 if (!file_exists($rutaArchivoDatosJson)) {
     file_put_contents($rutaArchivoDatosJson, json_encode([]) . "\n");
