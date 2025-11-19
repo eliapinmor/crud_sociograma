@@ -69,7 +69,6 @@ async function obtenerYMostrarListadoDeUsuarios() {
   try {
     const respuestaHttp = await fetch(`${URL_API_SERVIDOR}?action=list`);
     const cuerpoJson = await respuestaHttp.json();
-    console.log("Listado recibido:", cuerpoJson); // <-- Verifica aquí
     if (!cuerpoJson.ok) {
       throw new Error(cuerpoJson.error || "No fue posible obtener el listado.");
     }
