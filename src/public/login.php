@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo "<p>Email o contraseña incorrectos.</p>";
 
 }
+include_once 'includes/header.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">

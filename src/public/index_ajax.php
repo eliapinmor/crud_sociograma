@@ -53,11 +53,13 @@ if ($_SESSION["rol"] !== "admin") {
             placeholder="ejemplo@correo.com" autocomplete="email" inputmode="email" />
 
         </div>
-        <div class="form-row"> <label>Contraseña</label>
-          <input type="password" name="password" required placeholder="password">
+        <div class="form-row">
+          <label for="campo-contraseña" class="form-label">Contraseña</label>
+          <input type="password" name="password" class="form-input" id="campo-contraseña"required placeholder="password">
         </div>
-        <div class="form-row"> <label>Rol</label>
-          <input type="text" name="rol" required placeholder="admin/user">
+        <div class="form-row">
+          <label for="campo-rol" class="form-label">Rol</label>
+          <input type="text" name="rol" id="campo-rol" class="form-input" required placeholder="admin/user">
         </div>
 
         <div class="form-actions">
@@ -96,10 +98,7 @@ if ($_SESSION["rol"] !== "admin") {
       </div>
     </section>
   </main>
-  <!-- Enlace de retorno a la Parte 1 (opcional) -->
-  <footer class="pie-aplicacion">
-    <p><a href="/index.php">Ir a Parte 1 (clásica sin AJAX)</a></p>
-  </footer>
+
   <!-- Nuestro JavaScript -->
   <script src="/public/assets/js/main.js" defer></script>
 </body>

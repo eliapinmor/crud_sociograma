@@ -1,39 +1,344 @@
+/* ----- GENERAL ----- */
 body {
-    font-family: system-ui, sans-serif;
-    margin: 2rem;
+    font-family: "Inter", system-ui, sans-serif;
+    background: #f5f6fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
 }
 
-h1 {
+h1, h2 {
+    color: #222;
     margin-bottom: .5rem;
 }
 
-.texto-explicativo {
-    color: #666;
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ----- ENCABEZADO ----- */
+.encabezado-aplicacion {
+    background: #2c3e50;
+    padding: 1.5rem;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.encabezado-aplicacion__titulo {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.encabezado-aplicacion__descripcion {
+    margin-top: .5rem;
+    color: #dfe6e9;
+}
+
+/* ----- CONTENEDOR PRINCIPAL ----- */
+.zona-principal {
+    max-width: 900px;
+    margin: auto;
+    padding: 1rem;
+}
+
+/* ----- MENSAJES DE ESTADO ----- */
+#msg {
     margin-bottom: 1rem;
-}
-
-form {
-    display: grid;
-    gap: .5rem;
-    max-width: 420px;
-    margin-bottom: 1rem;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: .5rem .75rem;
+    font-weight: bold;
+    padding: .75rem 1rem;
+    border-radius: 6px;
+    display: inline-block;
 }
 
 #msg.ok {
-    color: #0a0;
+    background: #d4f9d4;
+    color: #0a7a0a;
+    border: 1px solid #94d894;
 }
 
 #msg.error {
-    color: #a00;
+    background: #ffe0e0;
+    color: #9b1111;
+    border: 1px solid #ffb2b2;
+}
+
+/* ----- FORMULARIO ----- */
+.bloque-formulario {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.formulario-alta-usuario {
+    display: grid;
+    gap: 1rem;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: .25rem;
+}
+
+.form-input {
+    padding: .6rem .8rem;
+    border: 1px solid #ccd1d9;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.form-input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.25);
+}
+
+/* ----- BOTONES ----- */
+.boton-primario {
+    background: #3498db;
+    color: #fff;
+    padding: .8rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.boton-primario:hover {
+    background: #217dbb;
+}
+
+/* ----- TABLA ----- */
+.tabla-contenedor {
+    overflow-x: auto;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.tabla-usuarios th {
+    background: #ecf0f1;
+    text-align: left;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+    padding: .75rem .8rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-usuarios tr:hover {
+    background: #f9fafb;
+}
+
+/* Botón de eliminar */
+button[data-posicion] {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: .5rem .9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+button[data-posicion]:hover {
+    background: #c0392b;
+}
+
+/* ----- FOOTER ----- */
+.pie-aplicacion {
+    margin-top: 2rem;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* ===== ESTILOS DEL CRUD AJAX | COHERENTE CON TU ESTILO GLOBAL ===== */
+
+/* Contenedor principal */
+.zona-principal {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Encabezado */
+.encabezado-aplicacion {
+  text-align: center;
+  background: #6664ef;
+  padding: 1.6rem;
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.encabezado-aplicacion__titulo {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.encabezado-aplicacion__descripcion {
+  margin-top: 0.4rem;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+header a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* ===== MENSAJES DE ESTADO ===== */
+#msg {
+  margin: 1rem auto;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  max-width: 600px;
+  text-align: center;
+}
+
+#msg.ok {
+  background-color: #d8e8ff;
+  color: #264dff;
+  border: 1px solid #b3c9ff;
+}
+
+#msg.error {
+  background-color: #ffe0e0;
+  color: #d9534f;
+  border: 1px solid #ffb2b2;
+}
+
+/* ===== FORMULARIO DE CREACIÓN ===== */
+.bloque-formulario {
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  padding: 2rem 3rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.formulario-alta-usuario {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-row label {
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.form-input,
+input[name="password"],
+input[name="rol"] {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+input[name="password"]:focus,
+input[name="rol"]:focus {
+  outline: none;
+  border-color: #6664ef;
+  box-shadow: 0 0 4px rgba(102, 100, 239, .4);
+}
+
+/* Botón principal */
+.boton-primario {
+  width: 100%;
+  background-color: #6664ef;
+  color: white;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.boton-primario:hover {
+  background-color: #4f4de0;
+  transform: translateY(-1px);
+}
+
+/* ===== TABLA ===== */
+.bloque-listado {
+  margin-top: 2rem;
+}
+
+.tabla-contenedor {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow-x: auto;
+}
+
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.tabla-usuarios th {
+  background: #6664ef;
+  color: white;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.tabla-usuarios td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.75rem;
+}
+
+.tabla-usuarios tr:hover {
+  background-color: #f3f3ff;
+}
+
+/* Botón Eliminar */
+button[data-posicion] {
+  background-color: #d9534f;
+  color: white;
+  padding: 0.45rem 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+button[data-posicion]:hover {
+  background-color: #c9302c;
 }
