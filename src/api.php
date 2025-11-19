@@ -71,6 +71,9 @@ if ($metodoHttpRecibido === 'POST' && $accionSolicitada === 'create') {
     $nombreUsuarioNuevo = trim((string) ($datosDecodificados['nombre'] ?? $_POST['nombre'] ?? ''));
     $correoUsuarioNuevo = trim((string) ($datosDecodificados['email'] ?? $_POST['email'] ?? ''));
     $correoUsuarioNormalizado = mb_strtolower($correoUsuarioNuevo);
+    $passwordUsuarioNuevo = trim((string) ($datosDecodificados['password'] ?? $_POST['password'] ?? ''));
+    $rolUsuarioNuevo = trim((string) ($datosDecodificados['rol'] ?? $_POST['rol'] ?? 'user'));
+
     // Validación mínima en servidor
     if ($nombreUsuarioNuevo === '' || $correoUsuarioNuevo === '') {
         responder_json_error('Los campos "nombre" y "email" son obligatorios.', 422);
@@ -93,6 +96,8 @@ if ($metodoHttpRecibido === 'POST' && $accionSolicitada === 'create') {
     $listaUsuarios[] = [
         'nombre' => $nombreUsuarioNuevo,
         'email' => $correoUsuarioNormalizado,
+        'password' => password_hash($passwordUsuarioNuevo, PASSWORD_DEFAULT),
+        'rol' => $rolUsuarioNuevo,
     ];
     file_put_contents(
         $rutaArchivoDatosJson,

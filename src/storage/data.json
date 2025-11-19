@@ -7,17 +7,15 @@
         "rol": "admin"
     },
     {
-        "id": 2,
         "nombre": "test",
         "email": "test@test.com",
-        "password": "test",
+        "password": "$2y$12$TAwhEybWw937oRu\/L\/HbVeQ5i.BBm2xGztovWxQJADVbhDj9mvPeO",
         "rol": "user"
     },
     {
-        "id": 3,
         "nombre": "admin",
         "email": "admin@test.com",
-        "password": "test",
-        "rol": "admin"
+        "password": "$2y$12$Im.b6t6k.iH2M2cqRbpZA.xGwl69K8pzqHCebJQ9j50pHer8VKJJi",
+        "rol": "user"
     }
 ]

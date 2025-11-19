@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (file_exists($archivo)) {
         $usuarios = json_decode(file_get_contents($archivo), true);
         foreach ($usuarios as $usuario) {
-            if ($usuario["email"] === $email && $usuario["password"] === $password) {
+            if ($usuario["email"] === $email && password_verify($password, $usuario["password"])) {
                 $_SESSION["usuario"] = $email;
                 $_SESSION["email"] = $email;
                 $_SESSION["rol"] = $usuario["rol"];
