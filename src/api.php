@@ -72,7 +72,7 @@ if ($metodoHttpRecibido === 'POST' && $accionSolicitada === 'create') {
     $correoUsuarioNuevo = trim((string) ($datosDecodificados['email'] ?? $_POST['email'] ?? ''));
     $correoUsuarioNormalizado = mb_strtolower($correoUsuarioNuevo);
     $passwordUsuarioNuevo = trim((string) ($datosDecodificados['password'] ?? $_POST['password'] ?? ''));
-    $rolUsuarioNuevo = trim((string) ($datosDecodificados['rol'] ?? $_POST['rol'] ?? 'user'));
+    $rolUsuarioNuevo = trim((string) ($datosDecodificados['rol'] ?? $_POST['rol'] ?? ''));
 
     // Validación mínima en servidor
     if ($nombreUsuarioNuevo === '' || $correoUsuarioNuevo === '') {
@@ -94,6 +94,7 @@ if ($metodoHttpRecibido === 'POST' && $accionSolicitada === 'create') {
     }
     // Agregamos y persistimos (guardamos el email normalizado)
     $listaUsuarios[] = [
+        'id' => uniqid(),
         'nombre' => $nombreUsuarioNuevo,
         'email' => $correoUsuarioNormalizado,
         'password' => password_hash($passwordUsuarioNuevo, PASSWORD_DEFAULT),
@@ -110,39 +111,42 @@ if ($metodoHttpRecibido === 'POST' && $accionSolicitada === 'create') {
 // Body JSON esperado: { "index": 0 }
 // Nota: podríamos usar método DELETE; aquí lo simplificamos a POST.
 if (
-    ($metodoHttpRecibido === 'POST' || $metodoHttpRecibido === 'DELETE') && $accionSolicitada ===
-    'delete'
+    ($metodoHttpRecibido === 'POST' || $metodoHttpRecibido === 'DELETE') && $accionSolicitada === 'delete'
 ) {
-    // 6.1) Intentamos obtener el índice por distintos canales
-    $indiceEnQuery = $_GET['index'] ?? null;
-    if ($indiceEnQuery === null) {
-        $cuerpoBruto = (string) file_get_contents('php://input');
-        if ($cuerpoBruto !== '') {
-            $datosDecodificados = json_decode($cuerpoBruto, true) ?? [];
-            $indiceEnQuery = $datosDecodificados['index'] ?? null;
-        } else {
-            $indiceEnQuery = $_POST['index'] ?? null;
+    $cuerpoBruto = (string) file_get_contents('php://input');
+    $datosDecodificados = $cuerpoBruto !== '' ? json_decode($cuerpoBruto, true) ?? [] : [];
+    $idRecibido = $datosDecodificados['id'] ?? null;
+
+    if ($idRecibido === null) {
+        responder_json_error('Falta el parámetro "id" para eliminar.', 422);
+    }
+
+    // Buscar usuario por id
+    $indice = null;
+    foreach ($listaUsuarios as $key => $u) {
+        if (($u['id'] ?? '') === $idRecibido) {
+            $indice = $key;
+            break;
         }
     }
-    // 6.2) Validaciones de existencia del parámetro
-    if ($indiceEnQuery === null) {
-        responder_json_error('Falta el parámetro "index" para eliminar.', 422);
+
+    if ($indice === null) {
+        responder_json_error('El usuario con ese ID no existe.', 404);
     }
-    $indiceUsuarioAEliminar = (int) $indiceEnQuery;
-    if (!isset($listaUsuarios[$indiceUsuarioAEliminar])) {
-        responder_json_error('El índice indicado no existe.', 404);
-    }
-    // 6.3) Eliminamos y reindexamos para mantener la continuidad
-    unset($listaUsuarios[$indiceUsuarioAEliminar]);
+
+    // Eliminar y reindexar
+    unset($listaUsuarios[$indice]);
     $listaUsuarios = array_values($listaUsuarios);
-    // 6.4) Guardamos el nuevo estado en disco
+
+    // Guardar cambios
     file_put_contents(
         $rutaArchivoDatosJson,
         json_encode($listaUsuarios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n"
     );
-    // 6.5) Devolvemos el listado actualizado
-    responder_json_exito($listaUsuarios); // 200 OK
+
+    responder_json_exito($listaUsuarios);
 }
+
 // 7) Si llegamos aquí, la acción solicitada no está soportada
 responder_json_error('Acción no soportada. Use list | create | delete', 400);
 

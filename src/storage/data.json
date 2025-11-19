@@ -1,21 +1,16 @@
 [
     {
-        "id": 1,
-        "nombre": "Lara",
-        "email": "lara@example.com",
-        "password": "test",
+        "id": "691dfc6ed45c9",
+        "nombre": "admin",
+        "email": "admin@test.com",
+        "password": "$2y$12$rmFMeT24VRIc8fc7e69ju.0INAQCelW6\/mmzcmIQ2BsxmazXKM.Om",
         "rol": "admin"
     },
     {
+        "id": "691dfd0a0f21f",
         "nombre": "test",
         "email": "test@test.com",
-        "password": "$2y$12$TAwhEybWw937oRu\/L\/HbVeQ5i.BBm2xGztovWxQJADVbhDj9mvPeO",
-        "rol": "user"
-    },
-    {
-        "nombre": "admin",
-        "email": "admin@test.com",
-        "password": "$2y$12$Im.b6t6k.iH2M2cqRbpZA.xGwl69K8pzqHCebJQ9j50pHer8VKJJi",
+        "password": "$2y$12$iSx5qe0.iO0JwReLwovU7u6jhOA0JhDkHVN98pqzpRaJptUyJwFCa",
         "rol": "user"
     }
 ]

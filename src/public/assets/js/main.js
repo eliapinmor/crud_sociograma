@@ -48,10 +48,11 @@ function renderizarTablaDeUsuarios(arrayUsuarios) {
 <td>${posicionEnLista + 1}</td>
 <td>${convertirATextoSeguro(usuario?.nombre ?? "")}</td>
 <td>${convertirATextoSeguro(usuario?.email ?? "")}</td>
+<td>${convertirATextoSeguro(usuario?.rol ?? "")}</td>
 <td>
 <button
 type="button"
-data-posicion="${posicionEnLista}"
+data-id="${usuario.id}"
 aria-label="Eliminar usuario ${posicionEnLista + 1}">
 Eliminar
 </button>
@@ -68,6 +69,7 @@ async function obtenerYMostrarListadoDeUsuarios() {
   try {
     const respuestaHttp = await fetch(`${URL_API_SERVIDOR}?action=list`);
     const cuerpoJson = await respuestaHttp.json();
+    console.log("Listado recibido:", cuerpoJson); // <-- Verifica aquí
     if (!cuerpoJson.ok) {
       throw new Error(cuerpoJson.error || "No fue posible obtener el listado.");
     }
@@ -88,6 +90,8 @@ formularioAltaUsuario?.addEventListener("submit", async (evento) => {
   const datosUsuarioNuevo = {
     nombre: String(datosFormulario.get("nombre") || "").trim(),
     email: String(datosFormulario.get("email") || "").trim(),
+    password: String(datosFormulario.get("password") || "").trim(),
+    rol: String(datosFormulario.get("rol") || "").trim(),
   };
   // 6.3) Validación mínima en cliente (si falla, no llamamos a la API)
   if (!datosUsuarioNuevo.nombre || !datosUsuarioNuevo.email) {
@@ -123,14 +127,11 @@ formularioAltaUsuario?.addEventListener("submit", async (evento) => {
 // -----------------------------------------------------------------------------
 nodoCuerpoTablaUsuarios?.addEventListener("click", async (evento) => {
   // 7.1) ¿Se ha hecho clic en un botón con data-posicion?
-  const nodoBotonEliminar = evento.target.closest("button[data-posicion]");
+  const nodoBotonEliminar = evento.target.closest("button[data-id]");
   if (!nodoBotonEliminar) return;
   // 7.2) Convertir el índice a número entero y validar
-  const posicionUsuarioAEliminar = parseInt(
-    nodoBotonEliminar.dataset.posicion,
-    10
-  );
-  if (!Number.isInteger(posicionUsuarioAEliminar)) return;
+  const idUsuario = nodoBotonEliminar.dataset.id;
+  if (!nodoBotonEliminar) return;
   // 7.3) Confirmación de seguridad
   if (!window.confirm("¿Deseas eliminar este usuario?")) return;
   try {
@@ -138,7 +139,7 @@ nodoCuerpoTablaUsuarios?.addEventListener("click", async (evento) => {
     const respuestaHttp = await fetch(`${URL_API_SERVIDOR}?action=delete`, {
       method: "POST", // simplificado; podríamos usar DELETE
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ index: posicionUsuarioAEliminar }),
+      body: JSON.stringify({ id: idUsuario }),
     });
     const cuerpoJson = await respuestaHttp.json();
     if (!cuerpoJson.ok) {
