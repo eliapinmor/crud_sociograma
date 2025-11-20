@@ -5,6 +5,10 @@ const nodoCuerpoTablaUsuarios = document.getElementById("tbody"); // <tbody> del
 const formularioAltaUsuario = document.getElementById("formCreate"); // <form> de alta
 const nodoZonaMensajesEstado = document.getElementById("msg");
 
+
+let usuarioEditandoId = null;
+let listaUsuarios = [];
+
 // -----------------------------------------------------------------------------
 // BLOQUE: Gestión de mensajes de estado (éxito / error)
 // Muestra un texto temporal en la página y lo limpia a los 2s.
@@ -50,12 +54,21 @@ function renderizarTablaDeUsuarios(arrayUsuarios) {
 <td>${convertirATextoSeguro(usuario?.email ?? "")}</td>
 <td>${convertirATextoSeguro(usuario?.rol ?? "")}</td>
 <td>
+
+<button
+type="button"
+data-id="${usuario.id}"
+aria-label="Editar usuario ${posicionEnLista + 1}">
+Editar
+</button>
 <button
 type="button"
 data-id="${usuario.id}"
 aria-label="Eliminar usuario ${posicionEnLista + 1}">
 Eliminar
 </button>
+
+
 </td>
 `;
     nodoCuerpoTablaUsuarios.appendChild(nodoFila);
@@ -93,16 +106,21 @@ formularioAltaUsuario?.addEventListener("submit", async (evento) => {
     rol: String(datosFormulario.get("rol") || "").trim(),
   };
   // 6.3) Validación mínima en cliente (si falla, no llamamos a la API)
-  if (!datosUsuarioNuevo.nombre || !datosUsuarioNuevo.email) {
-    mostrarMensajeDeEstado(
-      "error",
-      "Los campos Nombre y Email son obligatorios."
-    );
-    return;
+  // if (!datosUsuarioNuevo.nombre || !datosUsuarioNuevo.email) {
+  //   mostrarMensajeDeEstado(
+  //     "error",
+  //     "Los campos Nombre y Email son obligatorios."
+  //   );
+  //   return;
+  // }
+    let action = "create";
+  if (usuarioEditandoId) {
+    action = "edit";
+    datosUsuario.id = usuarioEditandoId;
   }
   try {
     // 6.4) Enviar al servidor como JSON
-    const respuestaHttp = await fetch(`${URL_API_SERVIDOR}?action=create`, {
+    const respuestaHttp = await fetch(`${URL_API_SERVIDOR}?action=${action}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(datosUsuarioNuevo),
@@ -125,6 +143,28 @@ formularioAltaUsuario?.addEventListener("submit", async (evento) => {
 // BLOQUE: Eliminación de usuario (POST delete) mediante delegación de eventos
 // -----------------------------------------------------------------------------
 nodoCuerpoTablaUsuarios?.addEventListener("click", async (evento) => {
+const btnEditar = evento.target.closest("button[aria-label^='Editar usuario']");
+if (btnEditar) {
+    const id = btnEditar.dataset.id;
+    if (!id) return;
+
+    // Buscar el usuario en la lista
+    const usuario = listaUsuarios.find(u => u.id === id);
+    if (!usuario) return;
+
+    // Rellenar el formulario
+    formularioAltaUsuario.nombre.value = usuario.nombre;
+    formularioAltaUsuario.email.value = usuario.email;
+    formularioAltaUsuario.password.value = "";
+    formularioAltaUsuario.rol.value = usuario.rol;
+
+    usuarioEditandoId = id;
+    document.getElementById("boton-agregar-usuario").textContent = "Guardar cambios";
+
+    return; // Muy importante para que no ejecute el bloque de eliminar
+}
+
+
   // 7.1) ¿Se ha hecho clic en un botón con data-posicion?
   const nodoBotonEliminar = evento.target.closest("button[data-id]");
   if (!nodoBotonEliminar) return;

@@ -147,6 +147,34 @@ if (
     responder_json_exito($listaUsuarios);
 }
 
+//editar usuario: POST /api.php?action=edit
+// Body JSON esperado: { "id": "...", "nombre": "...", "email": "..." }
+if ($metodoHttpRecibido === 'POST' && $accionSolicitada === 'edit') {
+    $cuerpoBruto = (string) file_get_contents('php://input');
+    $datosDecodificados = $cuerpoBruto !== '' ? (json_decode($cuerpoBruto, true) ?? []) : [];
+    // Extraemos datos y normalizamos
+
+    if (!$datosDecodificados['id'] ?? null) {
+        responder_json_error('Falta el ID del usuario para editar.', 422);
+    }
+
+    $id = $datosDecodificados['id'];
+
+    foreach ($listaUsuarios as $usuario) {
+        if ($usuario['id'] === $id) {
+            $usuario['nombre'] = trim((string) ($datosDecodificados['nombre'] ?? $_POST['nombre'] ?? ''));
+            $usuario['email'] = trim((string) ($datosDecodificados['email'] ?? $_POST['email'] ?? ''));
+            $usuario['rol'] = trim((string) ($datosDecodificados['rol'] ?? $_POST['rol'] ?? ''));
+            if (isset($datosDecodificados['password']) && $datosDecodificados['password'] !== '') {
+                $usuario['password'] = password_hash($datosDecodificados['password'], PASSWORD_DEFAULT);
+            }
+
+            responder_json_exito($listaUsuarios, 201);
+        }
+    }
+
+}
+
 // 7) Si llegamos aquí, la acción solicitada no está soportada
 responder_json_error('Acción no soportada. Use list | create | delete', 400);
 
@@ -168,4 +196,6 @@ function existeEmailDuplicado(array $usuarios, string $emailNormalizado): bool
     }
     return false;
 }
+
+
 ?>
