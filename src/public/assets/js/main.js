@@ -85,6 +85,7 @@ async function obtenerYMostrarListadoDeUsuarios() {
     if (!cuerpoJson.ok) {
       throw new Error(cuerpoJson.error || "No fue posible obtener el listado.");
     }
+    listaUsuarios = cuerpoJson.data;
     renderizarTablaDeUsuarios(cuerpoJson.data);
   } catch (error) {
     mostrarMensajeDeEstado("error", error.message);
@@ -116,7 +117,7 @@ formularioAltaUsuario?.addEventListener("submit", async (evento) => {
     let action = "create";
   if (usuarioEditandoId) {
     action = "edit";
-    datosUsuario.id = usuarioEditandoId;
+    datosUsuarioNuevo.id = usuarioEditandoId;
   }
   try {
     // 6.4) Enviar al servidor como JSON

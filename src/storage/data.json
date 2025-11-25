@@ -12,5 +12,12 @@
         "email": "test@test.com",
         "password": "$2y$12$iSx5qe0.iO0JwReLwovU7u6jhOA0JhDkHVN98pqzpRaJptUyJwFCa",
         "rol": "user"
+    },
+    {
+        "id": "6925c62c3c2dc",
+        "nombre": "as",
+        "email": "test1@test.com",
+        "password": "$2y$12$VDjG3CpeAr911Ry9RfoT6eCHP7rVBlkprC98Ooj7zHKh7dlOwJq\/2",
+        "rol": "user"
     }
 ]

@@ -149,31 +149,49 @@ if (
 
 //editar usuario: POST /api.php?action=edit
 // Body JSON esperado: { "id": "...", "nombre": "...", "email": "..." }
+// EDITAR usuario: POST /api.php?action=edit
 if ($metodoHttpRecibido === 'POST' && $accionSolicitada === 'edit') {
-    $cuerpoBruto = (string) file_get_contents('php://input');
-    $datosDecodificados = $cuerpoBruto !== '' ? (json_decode($cuerpoBruto, true) ?? []) : [];
-    // Extraemos datos y normalizamos
 
-    if (!$datosDecodificados['id'] ?? null) {
+    $cuerpoBruto = file_get_contents('php://input');
+    $datos = json_decode($cuerpoBruto, true) ?? [];
+
+    if (!isset($datos['id'])) {
         responder_json_error('Falta el ID del usuario para editar.', 422);
     }
 
-    $id = $datosDecodificados['id'];
+    $id = $datos['id'];
+    $usuarioEncontrado = false;
 
-    foreach ($listaUsuarios as $usuario) {
-        if ($usuario['id'] === $id) {
-            $usuario['nombre'] = trim((string) ($datosDecodificados['nombre'] ?? $_POST['nombre'] ?? ''));
-            $usuario['email'] = trim((string) ($datosDecodificados['email'] ?? $_POST['email'] ?? ''));
-            $usuario['rol'] = trim((string) ($datosDecodificados['rol'] ?? $_POST['rol'] ?? ''));
-            if (isset($datosDecodificados['password']) && $datosDecodificados['password'] !== '') {
-                $usuario['password'] = password_hash($datosDecodificados['password'], PASSWORD_DEFAULT);
+    foreach ($listaUsuarios as $i => $u) {
+
+        if ($u['id'] === $id) {
+
+            $listaUsuarios[$i]['nombre'] = trim($datos['nombre'] ?? $u['nombre']);
+            $listaUsuarios[$i]['email']  = mb_strtolower(trim($datos['email'] ?? $u['email']));
+            $listaUsuarios[$i]['rol']    = trim($datos['rol'] ?? $u['rol']);
+
+            if (!empty($datos['password'])) {
+                $listaUsuarios[$i]['password'] = password_hash($datos['password'], PASSWORD_DEFAULT);
             }
 
-            responder_json_exito($listaUsuarios, 201);
+            $usuarioEncontrado = true;
+            break;
         }
     }
 
+    if (!$usuarioEncontrado) {
+        responder_json_error('Usuario no encontrado por ID.', 404);
+    }
+
+    // Guardar cambios
+    file_put_contents(
+        $rutaArchivoDatosJson,
+        json_encode($listaUsuarios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+    );
+
+    responder_json_exito($listaUsuarios);
 }
+
 
 // 7) Si llegamos aquí, la acción solicitada no está soportada
 responder_json_error('Acción no soportada. Use list | create | delete', 400);
